@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Struktur untuk Tempat Tanggal Lahir
 struct TTL {
     char tempatLahir[51];
     int tanggalLahir;
@@ -10,6 +11,7 @@ struct TTL {
     int usia;
 };
 
+// Struktur untuk Alamat
 struct ALAMAT {
     char namaJalan[101];
     char namaKota[51];
@@ -17,6 +19,7 @@ struct ALAMAT {
     char provinsi[31];
 };
 
+// Struktur utama Mahasiswa
 struct infoMhs {
     char nimMhs[11];
     char namaMhs[41];
@@ -26,18 +29,24 @@ struct infoMhs {
     float gpaMhs;
 };
 
+// Variabel global untuk array dinamis mahasiswa
 struct infoMhs *mahasiswa = NULL;
-int storage = 2;
-int idx = 0;
+int storage = 2;   // kapasitas awal
+int idx = 0;       // jumlah data mahasiswa saat ini
 
+// 1. Fungsi untuk menambah data mahasiswa
 void tambahMhs() {
+    // Jika belum ada alokasi, buat array awal
     if (mahasiswa == NULL) {
         mahasiswa = malloc(storage * sizeof(struct infoMhs));
-    } else if (idx == storage) {
+    } 
+    // Jika penuh, gandakan kapasitas
+    else if (idx == storage) {
         storage *= 2;
         mahasiswa = realloc(mahasiswa, storage * sizeof(struct infoMhs));
     }
 
+    // Input data mahasiswa
     printf("\n===== MENU TAMBAH DATA MAHASISWA =====\n");
     printf("Masukkan NIM: ");
     scanf("%s", mahasiswa[idx].nimMhs);
@@ -71,10 +80,11 @@ void tambahMhs() {
     printf("GPA Mahasiswa: ");
     scanf("%f", &mahasiswa[idx].gpaMhs);
 
-    idx++;
+    idx++; // Tambah jumlah data
     printf("DATA TELAH BERHASIL DITAMBAHKAN!\n\n");
 }
 
+// 2. Fungsi untuk mengupdate data mahasiswa
 void updateMhs() {
     if (idx == 0) {
         printf("Tidak ada data mahasiswa.\n");
@@ -86,11 +96,13 @@ void updateMhs() {
     scanf("%d", &updateData);
     updateData--;
 
+    // Validasi input
     if (updateData < 0 || updateData >= idx) {
         printf("Nomor data tidak valid.\n");
         return;
     }
 
+    // Input data baru
     printf("\n===== MASUKKAN DATA BARU =====\n");
     printf("Masukkan NIM: ");
     scanf("%s", mahasiswa[updateData].nimMhs);
@@ -125,6 +137,7 @@ void updateMhs() {
     printf("DATA MAHASISWA KE-%d BERHASIL DIUPDATE!\n\n", updateData + 1);
 }
 
+// 3. Fungsi untuk menampilkan semua data mahasiswa
 void listMhs() {
     if (idx == 0) {
         printf("Tidak ada data mahasiswa.\n");
@@ -146,6 +159,7 @@ void listMhs() {
     }
 }
 
+// 4. Fungsi untuk menghapus data mahasiswa
 void deleteMhs() {
     if (idx == 0) {
         printf("Tidak ada data untuk dihapus.\n");
@@ -162,11 +176,13 @@ void deleteMhs() {
         return;
     }
 
+    // Geser data ke kiri untuk menimpa data yang dihapus
     memmove(&mahasiswa[num], &mahasiswa[num + 1], (idx - num - 1) * sizeof(struct infoMhs));
     idx--;
     printf("Data mahasiswa ke-%d berhasil dihapus!\n\n", num + 1);
 }
 
+// 5. Fungsi utama (main program)
 int main() {
     int choice;
     do {
@@ -189,6 +205,6 @@ int main() {
         }
     } while (choice != 5);
 
-    free(mahasiswa);
+    free(mahasiswa); // bebaskan memori
     return 0;
 }
